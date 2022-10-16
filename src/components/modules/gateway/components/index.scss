@@ -1,6 +1,6 @@
 .select-institution {
   background-color: var(--blue);
-  padding: 27px 15px;
+  padding: 27px 15px 0 15px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -36,6 +36,7 @@
   }
 
   &__options {
+    padding-bottom: 30px;
     border-radius: 7px;
     overflow: auto;
     flex: 1;
