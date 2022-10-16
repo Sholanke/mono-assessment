@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { BANK_LINKAGE_STATUS, GATEWAY_SCREEN_KEYS } from "../constants/gateway";
 import {
   SelectFinancialInstitution,
@@ -17,6 +17,7 @@ import { useToast } from "../../../../context/useToastProvider";
 import { GATEWAY_ERRORS } from "../constants/errors";
 import "./index.scss";
 import { generateInstitutionThemeStyles } from "../utils/gateway";
+import reCommitSession from "../api/reCommitSession";
 
 const DEFAULT_GATEWAY_SCREEN = GATEWAY_SCREEN_KEYS.SELECT_INSTITUTION;
 const DEFAULT_BANK_LINKAGE_STATUS = BANK_LINKAGE_STATUS.SUCCESS;
@@ -43,8 +44,7 @@ export default function Gateway({ closeGatewayModal }) {
   const [activeAuthMethod, setActiveAuthMethod] = useState();
   const [activeScreen, setActiveScreen] = useState(DEFAULT_GATEWAY_SCREEN);
   const [authenticating, setAuthenticating] = useState(false);
-  const [validatingSecurityQuestion, setValidatingSecurityQuestion] =
-    useState();
+  const [validatingSecurityAnswer, setValidatingSecurityQuestion] = useState();
   const [bankLinkageStatus, setBankLinkageStatus] = useState(
     DEFAULT_BANK_LINKAGE_STATUS
   );
@@ -127,7 +127,7 @@ export default function Gateway({ closeGatewayModal }) {
     }
   };
 
-  const getInstitutions = async () => {
+  const getInstitutions = useCallback(async () => {
     try {
       setShowInstitutionsLoader(true);
       const response = await getFinancialInstitutions();
@@ -147,7 +147,7 @@ export default function Gateway({ closeGatewayModal }) {
     } finally {
       setShowInstitutionsLoader(false);
     }
-  };
+  }, []);
 
   const handleAuthFormFieldChange = ({ name, value }) => {
     setAuthenticationFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -157,8 +157,36 @@ export default function Gateway({ closeGatewayModal }) {
     setSecurityFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSecurityFormSubmit = () => {
+  const handleSecurityFormSubmit = async () => {
     setValidatingSecurityQuestion(true);
+
+    try {
+      const response = await reCommitSession({
+        body: securityFormData,
+        sessionId,
+      });
+
+      if (apiResponseCodeIsSuccessful(response?.data?.status)) {
+        setLoginResponse(response?.data)
+        goToScreen(GATEWAY_SCREEN_KEYS.LINKAGE_STATUS);
+      } else {
+        const error = { response };
+        throw error;
+      }
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+      addToast({
+        title: `🚫 ${errorMessage || GATEWAY_ERRORS.TRY_AGAIN}`,
+        actions: [
+          {
+            label: "Retry",
+            onClick: () => handleSecurityFormSubmit(),
+          },
+        ],
+      });
+    } finally {
+      setValidatingSecurityQuestion(false);
+    }
   };
 
   const institutionThemeStyles = useMemo(() => {
@@ -169,7 +197,7 @@ export default function Gateway({ closeGatewayModal }) {
 
   useEffect(() => {
     getInstitutions();
-  }, []);
+  }, [getInstitutions]);
 
   return (
     <>
@@ -198,7 +226,7 @@ export default function Gateway({ closeGatewayModal }) {
             securityFormData,
             handleSecurityFormFieldChange,
             handleSecurityFormSubmit,
-            validatingSecurityQuestion,
+            validatingSecurityAnswer,
           }}
         />
       ) : null}

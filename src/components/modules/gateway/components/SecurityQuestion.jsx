@@ -13,7 +13,7 @@ export default function SecurityQuestion({
   handleSecurityFormFieldChange,
   handleSecurityFormSubmit,
   securityFormData,
-  validatingSecurityQuestion,
+  validatingSecurityAnswer,
 }) {
   const formTitle = loginResponse?.data?.title;
   const formConfig = loginResponse?.data?.form;
@@ -22,7 +22,7 @@ export default function SecurityQuestion({
     <div className="gateway-auth" style={institutionThemeStyles}>
       <div
         className="gateway-auth__header"
-        style={generateHeaderStyles(validatingSecurityQuestion)}
+        style={generateHeaderStyles(validatingSecurityAnswer)}
       >
         <BaseModalHeader
           onBack={() => goToScreen(GATEWAY_SCREEN_KEYS.LOG_IN)}
@@ -45,7 +45,7 @@ export default function SecurityQuestion({
             handleSubmit: handleSecurityFormSubmit,
             handleFormFieldChange: handleSecurityFormFieldChange,
             formData: securityFormData,
-            loading: validatingSecurityQuestion,
+            loading: validatingSecurityAnswer,
           }}
         />
       </div>

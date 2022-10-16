@@ -12,7 +12,7 @@
 
   &[data-variant="center"] {
     left: 50%;
-    top: 113px;
+    top: 53px;
     height: calc(100vh - 150px);
     margin: 0 auto;
     transform: translate(-50%, 0);
@@ -39,15 +39,17 @@
     height: 50%;
     width: 100%;
     animation-name: fadeWidgetUp;
-    animation-duration: 0.3s;
+    animation-duration: 0.32s;
     animation-fill-mode: forwards;
 
     @keyframes fadeWidgetUp {
       0% {
-        transform: translate(0, 100%);
+        transform: translate(0, 50%);
+        opacity: 0;
       }
       100% {
         transform: translate(0, 0);
+        opacity: 1;
       }
     }
   }
