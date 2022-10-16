@@ -78,8 +78,8 @@ export default function Gateway({ closeGatewayModal }) {
 
       if (apiResponseCodeIsSuccessful(responseStatus) && responseCode) {
         const nextStepScreenKey = MAP_RESPONSE_CODE_TO_SCREEN_KEY[responseCode];
-        setLoginResponse(response?.data);
         goToScreen(nextStepScreenKey);
+        setLoginResponse(response?.data);
       }
     } catch (error) {
       const errorMessage = error?.response?.data?.message;
@@ -167,8 +167,8 @@ export default function Gateway({ closeGatewayModal }) {
       });
 
       if (apiResponseCodeIsSuccessful(response?.data?.status)) {
-        setLoginResponse(response?.data)
         goToScreen(GATEWAY_SCREEN_KEYS.LINKAGE_STATUS);
+        setLoginResponse(response?.data)
       } else {
         const error = { response };
         throw error;
