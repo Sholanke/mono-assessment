@@ -4,27 +4,28 @@ import { GATEWAY_SCREEN_KEYS } from "../constants/gateway";
 import { generateHeaderStyles } from "../utils/gateway";
 import GatewayDynamicForm from "./GatewayDynamicForm";
 
-export default function GatewayLogin({
-  goToScreen,
-  activeAuthMethod,
+export default function SecurityQuestion({
   activeInstitution,
-  handleSubmitAuthForm,
-  closeGatewayModal,
-  authenticationFormData,
-  handleAuthFormFieldChange,
-  authenticating,
   institutionThemeStyles,
+  goToScreen,
+  closeGatewayModal,
+  loginResponse,
+  handleSecurityFormFieldChange,
+  handleSecurityFormSubmit,
+  securityFormData,
+  validatingSecurityQuestion,
 }) {
-  const authMethodFormConfig = activeAuthMethod?.ui?.form;
+  const formTitle = loginResponse?.data?.title;
+  const formConfig = loginResponse?.data?.form;
 
   return (
     <div className="gateway-auth" style={institutionThemeStyles}>
       <div
         className="gateway-auth__header"
-        style={generateHeaderStyles(authenticating)}
+        style={generateHeaderStyles(validatingSecurityQuestion)}
       >
         <BaseModalHeader
-          onBack={() => goToScreen(GATEWAY_SCREEN_KEYS.SELECT_INSTITUTION)}
+          onBack={() => goToScreen(GATEWAY_SCREEN_KEYS.LOG_IN)}
           onClose={closeGatewayModal}
         >
           <img
@@ -33,18 +34,18 @@ export default function GatewayLogin({
             src={activeInstitution?.icon}
           />
         </BaseModalHeader>
-        <p className="gateway-auth__header__title fade-right">Login</p>
+        <p className="gateway-auth__header__title fade-right">{formTitle}</p>
       </div>
 
       <div className="gateway-auth__form fade-right">
         <GatewayDynamicForm
           {...{
-            loading: authenticating,
-            formData: authenticationFormData,
-            handleSubmit: handleSubmitAuthForm,
-            formConfig: authMethodFormConfig,
-            handleFormFieldChange: handleAuthFormFieldChange,
+            formConfig,
             institutionThemeStyles,
+            handleSubmit: handleSecurityFormSubmit,
+            handleFormFieldChange: handleSecurityFormFieldChange,
+            formData: securityFormData,
+            loading: validatingSecurityQuestion,
           }}
         />
       </div>

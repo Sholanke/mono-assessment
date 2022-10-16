@@ -16,7 +16,7 @@ export default function BaseToast() {
   return createPortal(
     <div className="base-toast-wrapper">
       {allToast?.map?.((toastDetails) => (
-        <div className="base-toast fade-right">
+        <div className="base-toast fade-right" key={toastDetails?.id}>
           <div className="base-toast__message">
             {toastDetails?.title ? (
               <p className="base-toast__title">{toastDetails?.title}</p>
@@ -31,8 +31,8 @@ export default function BaseToast() {
           <div className="base-toast__actions">
             {Array.isArray(toastDetails?.actions) && (
               <>
-                {toastDetails?.actions?.map?.((action) => (
-                  <div>
+                {toastDetails?.actions?.map?.((action, i) => (
+                  <div key={i}>
                     <button
                       onClick={() => {
                         action?.onClick?.();

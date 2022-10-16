@@ -14,11 +14,8 @@ export default function ChooseAccount({
   selectedBankAccount,
   linkSelectedBankAccount,
   closeGatewayModal,
+  institutionThemeStyles,
 }) {
-  const institutionThemeStyles = useMemo(() => {
-    return generateInstitutionThemeStyles(activeInstitution?.primaryColor);
-  }, [activeInstitution?.primaryColor]);
-
   const selectBankAccount = (bankAccount) => {
     setSelectedBankAccount(bankAccount);
   };

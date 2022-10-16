@@ -1,6 +1,5 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { BaseInput } from "../../../ui/baseInput";
-import { generateInstitutionThemeStyles } from "../utils/gateway";
 import { BaseButton } from "../../../ui/baseButton";
 
 const FORM_ELEMENT_TYPES = {
@@ -17,22 +16,18 @@ const MAP_FORM_CONFIG_TYPE_TO_NATIVE_TYPE = {
 export default function GatewayDynamicForm({
   formConfig,
   handleSubmit,
-  activeInstitution,
   handleFormFieldChange,
   loading,
   formData,
+  institutionThemeStyles,
 }) {
   const handleFieldChange = ({ currentTarget: { name, value } }) => {
-    handleFormFieldChange({ name, value });
+    handleFormFieldChange?.({ name, value });
   };
-
-  const institutionThemeStyles = useMemo(() => {
-    return generateInstitutionThemeStyles(activeInstitution?.primaryColor);
-  }, [activeInstitution?.primaryColor]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    handleSubmit();
+    handleSubmit?.();
   };
 
   return (

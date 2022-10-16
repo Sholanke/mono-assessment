@@ -4,10 +4,7 @@ import { BaseModalHeader } from "../../../ui/baseModalHeader";
 import { BaseInput } from "../../../ui/baseInput";
 import { BaseModal } from "../../../ui/baseModal";
 import SvgSearch from "../../../ui/icons/SvgSearch";
-import {
-  generateInstitutionThemeStyles,
-  searchInstituteByTerm,
-} from "../utils/gateway";
+import { searchInstituteByTerm } from "../utils/gateway";
 import ChooseAuthMethod from "./ChooseAuthMethod";
 import debounce from "lodash.debounce";
 import { BaseEmptyState } from "../../../ui/baseEmptyState";
@@ -21,6 +18,7 @@ export default function SelectFinancialInstitution({
   closeGatewayModal,
   allFinancialInstitutions,
   showInstitutionsLoader,
+  institutionThemeStyles,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredInstitutes, setFilteredInstitutes] = useState([]);
@@ -28,36 +26,34 @@ export default function SelectFinancialInstitution({
     defaultValue: false,
   });
 
-  const institutionThemeStyles = useMemo(() => {
-    return generateInstitutionThemeStyles(activeInstitution?.primaryColor);
-  }, [activeInstitution?.primaryColor]);
-
   const handleAuth = (institution) => {
     setActiveInstitution(institution);
     openAuthModal();
   };
 
-  const _searchInstituteByTerm = useCallback(
+  const triggerSearchInstituteByTerm = useCallback(
     (term) => {
       const filteredResult = searchInstituteByTerm({
         term,
         institutes: allFinancialInstitutions,
       });
-      setFilteredInstitutes(filteredResult);
+      setSearchTerm((current) => {
+        if (current === term) setFilteredInstitutes(filteredResult);
+        return current;
+      });
     },
     [allFinancialInstitutions]
   );
 
   useEffect(() => {
-    _searchInstituteByTerm(searchTerm);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [_searchInstituteByTerm]);
+    triggerSearchInstituteByTerm(searchTerm);
+  }, [triggerSearchInstituteByTerm]);
 
   const debounceSearchInstituteByTerm = useMemo(() => {
     return debounce((term) => {
-      _searchInstituteByTerm(term);
+      triggerSearchInstituteByTerm(term);
     }, 400);
-  }, [_searchInstituteByTerm]);
+  }, [triggerSearchInstituteByTerm]);
 
   const handleSearchTermChange = useCallback(
     ({ currentTarget: { value } }) => {

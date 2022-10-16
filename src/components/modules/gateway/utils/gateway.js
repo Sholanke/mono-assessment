@@ -33,3 +33,10 @@ export const searchInstituteByTerm = ({ term, institutes }) => {
     return institutes;
   }
 };
+
+export const generateHeaderStyles = (loading) => {
+  return {
+    pointerEvents: loading ? "none" : "unset",
+    opacity: loading ? "0.6" : "1",
+  };
+};

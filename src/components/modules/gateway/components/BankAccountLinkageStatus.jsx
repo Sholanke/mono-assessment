@@ -1,18 +1,14 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { BaseModalHeader } from "../../../ui/baseModalHeader";
 import SvgSuccess from "../../../ui/icons/SvgSuccess";
 import { BANK_LINKAGE_STATUS } from "../constants/gateway";
-import { generateInstitutionThemeStyles } from "../utils/gateway";
 
 export default function BankAccountLinkageStatus({
   activeInstitution,
   bankLinkageStatus = BANK_LINKAGE_STATUS.PENDING,
   closeGatewayModal,
+  institutionThemeStyles,
 }) {
-  const institutionThemeStyles = useMemo(() => {
-    return generateInstitutionThemeStyles(activeInstitution?.primaryColor);
-  }, [activeInstitution?.primaryColor]);
-
   const mapStatusToDetails = {
     [BANK_LINKAGE_STATUS.PENDING]: {
       title: "Pending!",
