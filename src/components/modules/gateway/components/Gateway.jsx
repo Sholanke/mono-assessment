@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { BANK_LINKAGE_STATUS, GATEWAY_SCREEN_KEYS } from "../constants/gateway";
-import SelectFinancialInstitution from "./SelectFinancialInstitution";
+import { createConnectSession, getFinancialInstitutions } from "../api";
+import {
+  SelectFinancialInstitution,
+  GatewayLogin,
+  ChooseAccount,
+  BankAccountLinkageStatus,
+} from "../../gateway/components";
 import "./index.scss";
-import GatewayLogin from "./GatewayLogin";
-import ChooseAccount from "./ChooseAccount";
-import BankAccountLinkageStatus from "./BankAccountLinkageStatus";
-import getFinancialInstitutions from "../api/getFinancialInstitutions";
+import { useToast } from "../../../../context/useToastProvider";
+import { GATEWAY_ERRORS } from "../constants/errors";
 
 const GATEWAY_SCREENS = {
   [GATEWAY_SCREEN_KEYS.SELECT_INSTITUTION]: SelectFinancialInstitution,
@@ -24,6 +28,13 @@ export default function Gateway({ closeGatewayModal }) {
   const [selectedBankAccount, setSelectedBankAccount] = useState();
   const [activeAuthMethod, setActiveAuthMethod] = useState();
   const [activeScreen, setActiveScreen] = useState(DEFAULT_GATEWAY_SCREEN);
+  const [authenticating, setAuthenticating] = useState(false);
+  const [sessionId, setSessionId] = useState("");
+  const { addToast } = useToast();
+  const [authenticationFormData, setAuthenticationFormData] = useState({
+    username: "",
+    password: "",
+  });
   const [bankLinkageStatus, setBankLinkageStatus] = useState(
     DEFAULT_BANK_LINKAGE_STATUS
   );
@@ -35,22 +46,58 @@ export default function Gateway({ closeGatewayModal }) {
   const ActiveScreen = GATEWAY_SCREENS?.[activeScreen];
 
   const linkSelectedBankAccount = () => {
-    console.log("account linked");
     setBankLinkageStatus(BANK_LINKAGE_STATUS.SUCCESS);
     goToScreen(GATEWAY_SCREEN_KEYS.LINKAGE_STATUS);
   };
 
-  const handleSubmitAuthForm = () => {
-    goToScreen(GATEWAY_SCREEN_KEYS.CHOOSE_ACCOUNT);
+  const handleSubmitAuthForm = async () => {
+    setAuthenticating(true);
+
+    const body = {
+      institution: activeInstitution._id,
+      auth_method: activeAuthMethod.type,
+    };
+
+    try {
+      const response = await createConnectSession({ body });
+      const sessionId = response?.data?.id;
+
+      if (sessionId) {
+        setSessionId(sessionId);
+        goToScreen(GATEWAY_SCREEN_KEYS.CHOOSE_ACCOUNT);
+      }
+    } catch (error) {
+      addToast({
+        title: GATEWAY_ERRORS.FAILED_TO_LOG_IN,
+        description: GATEWAY_ERRORS.TRY_AGAIN,
+        actions: [
+          {
+            label: "Retry",
+            onClick: () => handleSubmitAuthForm(),
+          },
+        ],
+      });
+    } finally {
+      setAuthenticating(false);
+    }
   };
 
   const getInstitutions = async () => {
     try {
       setShowInstitutionsLoader(true);
       const response = await getFinancialInstitutions();
-
       setAllFinancialInstitutions(response?.data);
     } catch (error) {
+      addToast({
+        title: GATEWAY_ERRORS.FAILED_TO_LOAD_BANKS,
+        description: GATEWAY_ERRORS.TRY_AGAIN,
+        actions: [
+          {
+            label: "Retry",
+            onClick: () => getInstitutions(),
+          },
+        ],
+      });
     } finally {
       setShowInstitutionsLoader(false);
     }
@@ -59,6 +106,10 @@ export default function Gateway({ closeGatewayModal }) {
   useEffect(() => {
     getInstitutions();
   }, []);
+
+  const handleFormFieldChange = ({ name, value }) => {
+    setAuthenticationFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
   return (
     <>
@@ -79,6 +130,9 @@ export default function Gateway({ closeGatewayModal }) {
             closeGatewayModal,
             allFinancialInstitutions,
             showInstitutionsLoader,
+            handleFormFieldChange,
+            authenticationFormData,
+            authenticating,
           }}
         />
       ) : null}

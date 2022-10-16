@@ -1,7 +1,7 @@
 import React from "react";
 import useModal from "../../../../hooks/useModal";
-import BaseModal from "../../../ui/baseModal/BaseModal";
-import Gateway from "../components/Gateway";
+import { BaseModal } from "../../../ui/baseModal";
+import { Gateway } from "../components/";
 import "./index.scss";
 
 export default function GatewayPage() {
@@ -11,7 +11,12 @@ export default function GatewayPage() {
 
   return (
     <div className="gateway-page">
-      <button className="base-button gateway-page__open-btn" onClick={openGatewayModal}>Link Account</button>
+      <button
+        className="base-button gateway-page__open-btn"
+        onClick={openGatewayModal}
+      >
+        Link Account
+      </button>
 
       <BaseModal show={showGatewayModal} close={closeGatewayModal}>
         <Gateway {...{ closeGatewayModal }} />

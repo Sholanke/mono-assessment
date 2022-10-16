@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import BaseModalHeader from "../../../ui/baseHeader/BaseModalHeader";
+import { BaseModalHeader } from "../../../ui/baseModalHeader";
 import SvgSuccess from "../../../ui/icons/SvgSuccess";
 import { BANK_LINKAGE_STATUS } from "../constants/gateway";
 import { generateInstitutionThemeStyles } from "../utils/gateway";

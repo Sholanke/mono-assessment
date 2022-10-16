@@ -9,13 +9,15 @@ export default function BaseButton({ children, variant, loading, ...props }) {
     >
       {children}
       {loading ? (
-        <RotatingLines
-          strokeColor="white"
-          strokeWidth="5"
-          animationDuration=".4"
-          width="25"
-          visible={true}
-        />
+        <span className="base-button__icon">
+          <RotatingLines
+            strokeColor="white"
+            strokeWidth="5"
+            animationDuration=".4"
+            width="25"
+            visible={true}
+          />
+        </span>
       ) : null}
     </button>
   );

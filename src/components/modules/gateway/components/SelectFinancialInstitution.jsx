@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useModal from "../../../../hooks/useModal";
-import BaseModalHeader from "../../../ui/baseHeader/BaseModalHeader";
-import BaseInput from "../../../ui/baseInput/BaseInput";
-import BaseModal from "../../../ui/baseModal/BaseModal";
+import { BaseModalHeader } from "../../../ui/baseModalHeader";
+import { BaseInput } from "../../../ui/baseInput";
+import { BaseModal } from "../../../ui/baseModal";
 import SvgSearch from "../../../ui/icons/SvgSearch";
 import {
   generateInstitutionThemeStyles,
@@ -10,8 +10,8 @@ import {
 } from "../utils/gateway";
 import ChooseAuthMethod from "./ChooseAuthMethod";
 import debounce from "lodash.debounce";
-import BaseEmptyState from "../../../ui/baseEmptyState/BaseEmptyState";
-import BasePageLoader from "../../../ui/basePageLoader/BasePageLoader";
+import { BaseEmptyState } from "../../../ui/baseEmptyState";
+import { BasePageLoader } from "../../../ui/basePageLoader";
 
 export default function SelectFinancialInstitution({
   activeInstitution,

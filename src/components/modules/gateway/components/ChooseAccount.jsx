@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import BaseButton from "../../../ui/baseButton/BaseButton";
-import BaseModalHeader from "../../../ui/baseHeader/BaseModalHeader";
+import { BaseButton } from "../../../ui/baseButton";
+import { BaseModalHeader } from "../../../ui/baseModalHeader";
 import SvgVerify from "../../../ui/icons/SvgVerify";
 import { GATEWAY_SCREEN_KEYS, MOCK_ACCOUNTS } from "../constants/gateway";
 import { generateInstitutionThemeStyles } from "../utils/gateway";

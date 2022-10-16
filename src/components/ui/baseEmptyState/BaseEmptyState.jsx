@@ -1,5 +1,5 @@
 import React from "react";
-import BaseButton from "../baseButton/BaseButton";
+import { BaseButton } from "../baseButton";
 import "./index.scss";
 
 export default function BaseEmptyState({
@@ -15,7 +15,11 @@ export default function BaseEmptyState({
       <h4>{title}</h4>
       <p>{description}</p>
 
-      {showRefreshButton ? <BaseButton variant="light" onClick={()=> window.location.reload()}>Refresh Page</BaseButton> : null}
+      {showRefreshButton ? (
+        <BaseButton variant="light" onClick={() => window.location.reload()}>
+          Refresh Page
+        </BaseButton>
+      ) : null}
     </div>
   );
 }

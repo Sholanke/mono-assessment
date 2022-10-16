@@ -15,6 +15,28 @@
   justify-content: center;
   gap: 10px;
 
+  &:disabled {
+    opacity: 0.8;
+    cursor:not-allowed
+  }
+
+  &__icon {
+    animation-name: fadeUp;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+
+    @keyframes fadeUp {
+      0% {
+        transform: translate(0, 10px);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+    }
+  }
+
   &--clear {
     @extend .base-button;
     background: transparent;

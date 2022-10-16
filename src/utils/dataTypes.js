@@ -13,3 +13,11 @@ export const groupArrayBy = (items, field) => {
 
   return groupedItems;
 };
+
+export const deleteItemById = (id, items) => {
+  if (Array.isArray(items)) {
+    const filteredItems = [...items]?.filter?.((item) => item.id !== id);
+    return filteredItems;
+  }
+  return items;
+};

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import BaseModalHeader from "../../../ui/baseHeader/BaseModalHeader";
+import { BaseModalHeader } from "../../../ui/baseModalHeader";
 import { GATEWAY_SCREEN_KEYS } from "../constants/gateway";
 import { generateInstitutionThemeStyles } from "../utils/gateway";
 import GatewayDynamicForm from "./GatewayDynamicForm";
@@ -10,6 +10,9 @@ export default function GatewayLogin({
   activeInstitution,
   handleSubmitAuthForm,
   closeGatewayModal,
+  authenticationFormData,
+  handleFormFieldChange,
+  authenticating,
 }) {
   const institutionThemeStyles = useMemo(() => {
     return generateInstitutionThemeStyles(activeInstitution?.primaryColor);
@@ -35,7 +38,9 @@ export default function GatewayLogin({
 
       <div className="gateway-auth__form fade-right">
         <GatewayDynamicForm
-          {...{ activeInstitution }}
+          {...{ activeInstitution, handleFormFieldChange }}
+          loading={authenticating}
+          formData={authenticationFormData}
           handleSubmit={handleSubmitAuthForm}
           formConfig={authMethodFormConfig}
         />
