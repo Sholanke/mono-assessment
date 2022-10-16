@@ -1,0 +1,308 @@
+.select-institution {
+  background-color: var(--blue);
+  padding: 27px 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &,
+  * {
+    color: #fff;
+  }
+
+  &__icon {
+    height: 50px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  &__search {
+    margin-top: 27px;
+    margin-bottom: 16px;
+
+    .base-input__text-space {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+
+      &:focus {
+        border: 2px solid #fff;
+      }
+
+      &::placeholder {
+        color: #fff;
+      }
+    }
+  }
+
+  &__options {
+    border-radius: 7px;
+    overflow: auto;
+    flex: 1;
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+  }
+
+  &__option {
+    background-color: #fff;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 7px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.03);
+    border: none;
+    font-size: 15px;
+    text-align: left;
+    line-height: 1.5;
+    height: fit-content;
+
+    &,
+    * {
+      color: var(--text-black);
+    }
+
+    img {
+      height: 40px;
+    }
+  }
+
+  &__choose-auth-method {
+    padding: 25px 32px;
+
+    &,
+    * {
+      color: var(--text-black);
+    }
+
+    h3 {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 22px;
+    }
+
+    &__method-container {
+      border-bottom: 1px solid var(--grey-divider);
+
+      &:first-of-type {
+        .select-institution__choose-auth-method__method {
+          padding-top: 0;
+        }
+      }
+      &:last-of-type {
+        border-bottom: 0;
+
+        .select-institution__choose-auth-method__method {
+          padding-bottom: 0;
+        }
+      }
+    }
+
+    &__method {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      border: 0;
+      text-align: left;
+      padding: 20px 0;
+      background-color: transparent;
+
+      &__title {
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 15px;
+      }
+
+      &__description {
+        line-height: 1.54;
+        font-size: 13px;
+        color: var(--text-grey);
+      }
+
+      &__icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100vh;
+        background-color: var(--institution-theme);
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+.gateway-auth {
+  min-height: 100%;
+  background: rgba(var(--institution-theme-rgb), 0.175);
+
+  &__header {
+    padding: 20px;
+    background-color: #fff;
+
+    &__icon {
+      height: 50px;
+    }
+
+    &__title {
+      margin: 0 auto;
+      width: fit-content;
+      text-align: center;
+      color: var(--text-grey);
+      font-size: 20px;
+      margin-top: 30px;
+    }
+
+    &__description {
+      text-align: center;
+      color: var(--text-placeholder);
+      margin-top: 2px;
+    }
+  }
+
+  &__form {
+    padding: 50px;
+
+    .base-input {
+      &__text-space {
+        &:focus {
+          border: 2px solid var(--institution-theme);
+          background-color: #fff;
+        }
+
+        &:valid {
+          background-color: #fff;
+        }
+      }
+    }
+
+    .base-button {
+      margin-top: 5px;
+      background-color: rgba(var(--institution-theme-rgb), 1);
+      border: 1px solid rgba(var(--institution-theme-rgb), 0.175);
+    }
+  }
+
+  &__accounts {
+    margin-bottom: 20px;
+  }
+
+  &__account {
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(2px);
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    margin-bottom: 15px;
+    text-align: left;
+    width: 100%;
+
+    &[data-active="true"] {
+      background-color: #fff;
+
+      .gateway-auth__account__currency-icon {
+        background: rgb(255, 255, 255);
+      }
+    }
+
+    &__currency-icon {
+      flex-shrink: 0;
+      height: 40px;
+      width: 40px;
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--institution-theme);
+      box-shadow: 0px 5px 5px rgba(var(--institution-theme-rgb), 0.101);
+    }
+
+    &__details {
+      margin-left: 20px;
+
+      &__name {
+        color: var(--text-grey);
+        font-size: 13px;
+        margin-bottom: 2px;
+      }
+
+      &__number {
+        color: var(--text-grey);
+        font-size: 15px;
+      }
+
+      &__amount {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+    }
+
+    &__icon {
+      margin-left: auto;
+    }
+  }
+}
+
+.gateway-linkage-status {
+  background-color: var(--institution-theme);
+  padding: 20px;
+  min-height: 100%;
+
+  &,
+  * {
+    color: #fff;
+  }
+
+  h4,
+  p {
+    text-align: center;
+  }
+
+  h4 {
+    font-size: 30px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    max-width: 350px;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 auto;
+    margin-bottom: 134px;
+  }
+
+  &__icon {
+    width: fit-content;
+    display: block;
+    margin: auto;
+    margin-top: 120px;
+    font-size: 70px;
+    line-height: 1;
+
+    svg {
+      &,
+      * {
+        color: var(--institution-theme);
+      }
+    }
+  }
+
+  .base-button {
+    background-color: #fff;
+    border: 2px solid #fff;
+    color: var(--text-grey);
+    margin: 0 30px;
+    width: calc(100% - 60px);
+  }
+}

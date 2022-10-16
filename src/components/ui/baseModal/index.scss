@@ -1,0 +1,70 @@
+.base-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 485px;
+  background-color: #fff;
+  border-radius: 35px;
+  overflow: hidden;
+  max-height: 718px;
+  overflow: auto;
+
+  &[data-variant="center"] {
+    left: 50%;
+    top: 113px;
+    height: calc(100vh - 150px);
+    margin: 0 auto;
+    transform: translate(-50%, 0);
+    animation-name: ScaleIn;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+
+    @keyframes ScaleIn {
+      0% {
+        transform: translate(-50%, 0) scale(0.5);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, 0) scale(1);
+        opacity: 1;
+      }
+    }
+  }
+
+  &[data-variant="widget"] {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    height: 50%;
+    width: 100%;
+    animation-name: fadeWidgetUp;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+
+    @keyframes fadeWidgetUp {
+      0% {
+        transform: translate(0, 100%);
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+  }
+}
+
+.base-modal-overlay {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(7.5px);
+  top: 0;
+
+  &[data-variant="widget"] {
+    position: fixed;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+}

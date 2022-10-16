@@ -1,0 +1,33 @@
+.base-empty-state {
+  text-align: center;
+  margin-top: 50px;
+
+  &__icon {
+    font-size: 60px;
+  }
+
+  svg,
+  img {
+    height: 70px;
+    width: 70px;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: 300;
+    margin-top: 10px;
+  }
+
+  p {
+    opacity: 0.7;
+    max-width: 300px;
+    margin: 10px auto;
+    line-height: 1.5;
+  }
+
+  .base-button--light {
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+}

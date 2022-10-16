@@ -1,0 +1,43 @@
+@import "./common/fonts";
+@import "./common/animation";
+@import "./common/_base-button";
+
+:root {
+  --orange: #d94f00;
+  --default-button-theme: #fff;
+  --blue: #1f40c5;
+  --blue-light: #3657dc;
+  --grey-divider: #d1d6de;
+  --text-black: #050929;
+  --text-grey: #55586f;
+  --text-placeholder: #8c8fa3;
+  --institution-theme: var(--blue);
+  --button-gradient--orange: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    var(--orange);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.1s;
+
+  &:active {
+    transform: scale(0.93);
+  }
+}
+
+body {
+  font-family: "DM Sans", Arial, Helvetica, sans-serif;
+  font-size: 15px;
+}
