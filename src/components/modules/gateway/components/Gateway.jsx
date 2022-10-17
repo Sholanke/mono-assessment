@@ -38,18 +38,20 @@ const MAP_RESPONSE_CODE_TO_SCREEN_KEY = {
 
 export default function Gateway({ closeGatewayModal }) {
   const [allFinancialInstitutions, setAllFinancialInstitutions] = useState([]);
-  const [showInstitutionsLoader, setShowInstitutionsLoader] = useState(false);
   const [activeInstitution, setActiveInstitution] = useState();
   const [selectedBankAccount, setSelectedBankAccount] = useState();
   const [activeAuthMethod, setActiveAuthMethod] = useState();
   const [activeScreen, setActiveScreen] = useState(DEFAULT_GATEWAY_SCREEN);
   const [authenticating, setAuthenticating] = useState(false);
-  const [validatingSecurityAnswer, setValidatingSecurityQuestion] = useState();
+  const [sessionId, setSessionId] = useState();
+  const [showInstitutionsLoader, setShowInstitutionsLoader] = useState(false);
+  const [validatingSecurityAnswer, setValidatingSecurityQuestion] =
+    useState(false);
+  const [linkingBankAccount, setLinkingBankAccount] = useState(false);
   const [bankLinkageStatus, setBankLinkageStatus] = useState(
     DEFAULT_BANK_LINKAGE_STATUS
   );
   const [loginResponse, setLoginResponse] = useState();
-  const [sessionId, setSessionId] = useState("");
   const { addToast } = useToast();
   const [securityFormData, setSecurityFormData] = useState({});
   const [authenticationFormData, setAuthenticationFormData] = useState({});
@@ -58,9 +60,18 @@ export default function Gateway({ closeGatewayModal }) {
     setActiveScreen(screenSlug);
   };
 
-  const linkSelectedBankAccount = () => {
-    setBankLinkageStatus(BANK_LINKAGE_STATUS.SUCCESS);
-    goToScreen(GATEWAY_SCREEN_KEYS.LINKAGE_STATUS);
+  const determinePostAuthenticationStep = (response) => {
+    const responseStatus = response?.data?.status;
+    const responseCode = response?.data?.responseCode;
+
+    if (apiResponseCodeIsSuccessful(responseStatus) && responseCode) {
+      const nextStepScreenKey = MAP_RESPONSE_CODE_TO_SCREEN_KEY[responseCode];
+      goToScreen(nextStepScreenKey);
+      setLoginResponse(response?.data);
+    } else {
+      const error = { response };
+      throw error;
+    }
   };
 
   const loginWithSessionId = async (sessionId) => {
@@ -73,14 +84,7 @@ export default function Gateway({ closeGatewayModal }) {
         sessionId: sessionId,
       });
 
-      const responseStatus = response?.data?.status;
-      const responseCode = response?.data?.responseCode;
-
-      if (apiResponseCodeIsSuccessful(responseStatus) && responseCode) {
-        const nextStepScreenKey = MAP_RESPONSE_CODE_TO_SCREEN_KEY[responseCode];
-        goToScreen(nextStepScreenKey);
-        setLoginResponse(response?.data);
-      }
+      if (response) determinePostAuthenticationStep(response);
     } catch (error) {
       const errorMessage = error?.response?.data?.message;
       addToast({
@@ -147,7 +151,7 @@ export default function Gateway({ closeGatewayModal }) {
     } finally {
       setShowInstitutionsLoader(false);
     }
-  }, []);
+  }, [addToast]);
 
   const handleAuthFormFieldChange = ({ name, value }) => {
     setAuthenticationFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -155,6 +159,20 @@ export default function Gateway({ closeGatewayModal }) {
 
   const handleSecurityFormFieldChange = ({ name, value }) => {
     setSecurityFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleRecommitSessionError = ({ errorMessage, retry }) => {
+    addToast({
+      title: `🚫 ${errorMessage || GATEWAY_ERRORS.TRY_AGAIN}`,
+      actions: retry
+        ? [
+            {
+              label: "Retry",
+              onClick: () => retry(),
+            },
+          ]
+        : null,
+    });
   };
 
   const handleSecurityFormSubmit = async () => {
@@ -165,27 +183,38 @@ export default function Gateway({ closeGatewayModal }) {
         body: securityFormData,
         sessionId,
       });
-
-      if (apiResponseCodeIsSuccessful(response?.data?.status)) {
-        goToScreen(GATEWAY_SCREEN_KEYS.LINKAGE_STATUS);
-        setLoginResponse(response?.data)
-      } else {
-        const error = { response };
-        throw error;
-      }
+      
+      if (response) determinePostAuthenticationStep(response);
     } catch (error) {
       const errorMessage = error?.response?.data?.message;
-      addToast({
-        title: `🚫 ${errorMessage || GATEWAY_ERRORS.TRY_AGAIN}`,
-        actions: [
-          {
-            label: "Retry",
-            onClick: () => handleSecurityFormSubmit(),
-          },
-        ],
+      handleRecommitSessionError({
+        errorMessage,
+        retry: handleSecurityFormSubmit,
       });
     } finally {
       setValidatingSecurityQuestion(false);
+    }
+  };
+
+  const linkSelectedBankAccount = async () => {
+    setLinkingBankAccount(true);
+
+    try {
+      const response = await reCommitSession({
+        sessionId,
+        body: {
+          account: selectedBankAccount.index,
+        },
+      });
+      if (response) determinePostAuthenticationStep(response);
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message;
+      handleRecommitSessionError({
+        errorMessage,
+        retry: linkSelectedBankAccount,
+      });
+    } finally {
+      setLinkingBankAccount(false);
     }
   };
 
@@ -227,6 +256,7 @@ export default function Gateway({ closeGatewayModal }) {
             handleSecurityFormFieldChange,
             handleSecurityFormSubmit,
             validatingSecurityAnswer,
+            linkingBankAccount,
           }}
         />
       ) : null}

@@ -2,7 +2,7 @@ import React from "react";
 import { BaseButton } from "../../../ui/baseButton";
 import { BaseModalHeader } from "../../../ui/baseModalHeader";
 import SvgVerify from "../../../ui/icons/SvgVerify";
-import { GATEWAY_SCREEN_KEYS, MOCK_ACCOUNTS } from "../constants/gateway";
+import { GATEWAY_SCREEN_KEYS } from "../constants/gateway";
 import { NumericFormat } from "react-number-format";
 import { CurrencyIcon } from "../../../ui/icons/currency/CurrencyIcon";
 
@@ -14,7 +14,11 @@ export default function ChooseAccount({
   linkSelectedBankAccount,
   closeGatewayModal,
   institutionThemeStyles,
+  linkingBankAccount,
+  loginResponse,
 }) {
+  const bankAccounts = loginResponse?.data;
+
   const selectBankAccount = (bankAccount) => {
     setSelectedBankAccount(bankAccount);
   };
@@ -40,15 +44,15 @@ export default function ChooseAccount({
 
       <div className="gateway-auth__form fade-right">
         <div className="gateway-auth__accounts">
-          {Array.isArray(MOCK_ACCOUNTS)
-            ? MOCK_ACCOUNTS?.map((account, i) => {
+          {Array.isArray(bankAccounts)
+            ? bankAccounts?.map((account, i) => {
                 const thisBankAccountIsActive =
                   account?.accountNumber === selectedBankAccount?.accountNumber;
 
                 return (
                   <button
                     className="gateway-auth__account"
-                    onClick={() => selectBankAccount(account)}
+                    onClick={() => selectBankAccount({ ...account, index: i })}
                     data-active={thisBankAccountIsActive}
                     key={i}
                   >
@@ -88,6 +92,8 @@ export default function ChooseAccount({
         <BaseButton
           style={institutionThemeStyles}
           onClick={linkSelectedBankAccount}
+          loading={linkingBankAccount}
+          disabled={linkingBankAccount}
         >
           Continue
         </BaseButton>

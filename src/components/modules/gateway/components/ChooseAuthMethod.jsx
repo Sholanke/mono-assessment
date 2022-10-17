@@ -40,7 +40,10 @@ export default function ChooseAuthMethod({
             >
               <span className="select-institution__choose-auth-method__method__icon">
                 <img
-                  src={MAP_AUTH_METHOD_TYPE_TO_ICON[method?.type]}
+                  src={
+                    MAP_AUTH_METHOD_TYPE_TO_ICON[method?.type] ||
+                    MAP_AUTH_METHOD_TYPE_TO_ICON.internet_banking
+                  }
                   alt="authentication method icon"
                 />
               </span>

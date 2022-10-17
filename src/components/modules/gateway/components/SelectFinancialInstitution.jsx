@@ -47,6 +47,7 @@ export default function SelectFinancialInstitution({
 
   useEffect(() => {
     triggerSearchInstituteByTerm(searchTerm);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerSearchInstituteByTerm]);
 
   const debounceSearchInstituteByTerm = useMemo(() => {
