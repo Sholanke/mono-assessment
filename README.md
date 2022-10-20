@@ -1,4 +1,4 @@
-# MONO ASSESSMENT BY OLAMIDE SHOLANKE
+# Getting Started
 
 ## Available Scripts
 
